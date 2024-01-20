@@ -4,10 +4,14 @@ import com.md4_demo_spring_boot.model.Product;
 import com.md4_demo_spring_boot.repository.CategoryRepository;
 import com.md4_demo_spring_boot.repository.ProductRepository;
 import com.md4_demo_spring_boot.service.ProductService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
+
 
 @Controller
 @RequestMapping("/products")
@@ -33,9 +37,16 @@ public class ProductController {
         return modelAndView;
     }
     @PostMapping("/save")
-    public String add(Product product){
+    public ModelAndView add(@Valid Product product, BindingResult bindingResult){
+        if (bindingResult.hasErrors()){
+            ModelAndView modelAndView = new ModelAndView("/product/create");
+            modelAndView.addObject("listErr", bindingResult.getAllErrors());
+            modelAndView.addObject("listCategory", categoryRepository.findAll());
+            modelAndView.addObject("item", new Product());
+            return modelAndView;
+        }
         productRepository.save(product);
-        return "redirect:/products";
+        return new ModelAndView("redirect:/products");
     }
     @GetMapping("/edit/{id}")
     public ModelAndView showEditForm(@PathVariable Long id){

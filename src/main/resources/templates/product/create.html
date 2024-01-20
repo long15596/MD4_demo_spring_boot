@@ -6,6 +6,7 @@
     <title>Title</title>
 </head>
 <body>
+<div th:each="err:${listErr}" th:text="${err.getDefaultMessage()}"></div>
 <form action="/products/save" method="post">
     <input type="text" name="name"><br>
     <input type="number" name="price"><br>

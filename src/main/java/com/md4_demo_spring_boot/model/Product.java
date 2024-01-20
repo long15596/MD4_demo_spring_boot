@@ -1,13 +1,19 @@
 package com.md4_demo_spring_boot.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
 
 @Entity
 public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
+    @NotBlank(message = "Không được để trống")
+    @Pattern(regexp = "^[a-zA-Z]+$", message = "Phải nhập vào chữ")
     private String name;
+    @Min(value = 10, message = "Nhập giá lớn hơn 0")
     private double price;
     @ManyToOne
     private Category category;
